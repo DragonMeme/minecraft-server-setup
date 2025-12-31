@@ -22,3 +22,5 @@ This repository contains the setup for setting up a minecraft server without hav
 - Clean up process: `make down`
 - `make server` is only needed when server version changes or initial setup.
 - You can just `make up` from then on when you see that the `.env` file information agrees with your server version.
+- If you want to reset the world, you can run `make clean-world` after exiting `make up`.
+- It is a good idea to backup the `out/world` data incase you want to reload the world.
