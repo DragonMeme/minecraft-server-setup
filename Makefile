@@ -12,7 +12,7 @@ setup-env:
 	./setup_mc_env.sh -mcv $(MCVERSION)
 
 up:
-	docker compose up
+	docker compose up -d && docker compose attach mc-server
 
 down:
 	docker compose down
