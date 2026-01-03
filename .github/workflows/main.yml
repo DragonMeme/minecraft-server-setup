@@ -1,0 +1,50 @@
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          # Required for the action to be able to push
+          fetch-depth: 0 
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          architecture: "x64"
+
+      - name: Install required packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Execute Refresh script
+        run: python refresh_vanilla_versions.py
+          
+      - name: Add any changed files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+
+      - name: Commit changes if any
+        run: |
+          if git diff --cached --exit-code; then
+            echo "No changes to commit. Skipping push."
+            echo "PUSH_NEEDED=false" >> $GITHUB_ENV
+          else
+            git commit -m "Automated scheduled update"
+            echo "Changes committed. Proceeding with push."
+            echo "PUSH_NEEDED=true" >> $GITHUB_ENV
+          fi
+          
+      - name: Push changes when change detected
+        if: env.PUSH_NEEDED == 'true' # Check the environment variable
+        run: git push
