@@ -45,6 +45,22 @@ Setup includes the following:
 - Try to `git pull` if the newest server version is not supported.
     - There is a github action that auto-populates the server versions every 24 hours.
 
+## Extra
+
+WARNING: Not for those new to docker.
+
+### Environment only image
+
+There is a build stage where only the JRE environment is made without downloading the server. Can be great for trying out other modded servers.
+
+You can start up an instance by going to the existing `docker-compose.yaml` and change the following:
+- Change the `target` value in `build` from `minecraft-server` to `env-base`.
+- Change the `command` in `mc-server` to `sleep infinity` if you want to keep the environment up for testing purposes.
+- Place the server JAR file in this directory and uncomment the `server.jar` bind so the image can use the JAR.
+- Run `make server [MC Version]` as usual.
+
+Disclaimer: Modded servers are not guaranteed to work with this setup as they may need extra JRE modules.
+
 # Credits
 
 - [Mojang Studios](https://www.minecraft.net/) for providing the server JARs and metadata.

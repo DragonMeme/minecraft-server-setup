@@ -40,3 +40,12 @@ ARG UNAME=root
 USER ${UNAME}
 
 CMD ["java", "-jar", "/home/server.jar", "--nogui"]
+
+# Only have the environment setup for local downloaded server.
+# You should bind the "server.jar" file to "/home/server.jar" if using this stage.
+# This stage is for experimental purposes.
+FROM server-base AS env-base
+ARG UNAME=root
+USER ${UNAME}
+
+CMD ["java", "-jar", "/home/server.jar", "--nogui"]

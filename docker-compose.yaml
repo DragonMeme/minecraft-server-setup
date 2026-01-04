@@ -12,6 +12,7 @@ services:
     stdin_open: true
     volumes:
       - ./out:/home/${USER}/
+      #- ./server.jar:/home/server.jar
     tty: true
     ports:
       - "25565:25565"
