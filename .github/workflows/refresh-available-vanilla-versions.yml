@@ -48,8 +48,8 @@ jobs:
           pip install requests
 
       - name: Execute refresh script
-        run: python scripts/refresh_vanilla_versions.py
-          
+        run: python scripts/refresh_vanilla_versions.py > pyscript.log
+
       - name: Add any changed files
         run: |
           git config --local user.email "action@github.com"
@@ -62,11 +62,18 @@ jobs:
             echo "No changes to commit. Skipping push."
             echo "PUSH_NEEDED=false" >> $GITHUB_ENV
           else
-            git commit -m "Automated scheduled update"
+            FORMATTED_VERSIONS="$(grep -Po "Version: \K[^ ]+" pyscript.log | sed 's/^/- /')"
+            VERSION_COUNT=$(echo "${FORMATTED_VERSIONS}" | tr -d -c '\n' | wc -c)
+            TITLE="Added new minecraft version"
+            if (( $VERSION_COUNT > 1 )); then
+              TITLE="Added new minecraft versions"
+            fi
+            echo -e "${TITLE}\n\n${FORMATTED_VERSIONS}" > commit.log
+            git commit --file commit.log
             echo "Changes committed. Proceeding with push."
             echo "PUSH_NEEDED=true" >> $GITHUB_ENV
           fi
-          
+
       - name: Push changes when change detected
         if: env.PUSH_NEEDED == 'true' # Check the environment variable
         run: git push
