@@ -2,7 +2,7 @@
 
 jqExists=$(which jq)
 
-if [[ jqExists == "" ]]; then
+if [[ "$jqExists" == "" ]]; then
 	echo "jq is required for the script to work, please install \"jq\" to use."
 	exit 1
 fi
@@ -34,7 +34,7 @@ while (( $# )); do
 	esac
 done
 
-MCMETADATA=$(cat available_versions.json | jq ".\"$MC_VERSION\"")
+MCMETADATA=$(cat available_versions.json | jq -e ".\"$MC_VERSION\"")
 
 if [[ $? -ne 0 ]]; then
 	echo "Argument '$MC_VERSION' is NOT a valid version number. Please try a different version."
