@@ -5,7 +5,7 @@ FROM eclipse-temurin:${JAVA_VERSION}-alpine AS jre-dev
 WORKDIR /home
 
 COPY ./scripts/gen_jre.sh /home/setup.sh
-RUN apk update && apk upgrade && apk add --no-cache \
+RUN apk add --no-cache \
     bash \
     binutils
 
@@ -16,7 +16,7 @@ RUN ./setup.sh
 FROM alpine:latest AS server-base
 
 # Include optional libs for minecraft server functionality.
-RUN apk update && apk upgrade && apk add --no-cache \
+RUN apk add --no-cache \
     eudev-libs
 
 ENV JAVA_HOME=/usr/local
