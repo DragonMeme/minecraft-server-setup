@@ -12,11 +12,12 @@ services:
         - SERVER_LINK=${SERVER_LINK}
         # - MINECRAFT_EULA=TRUE # By uncommenting this, you agree to Minecraft's EULA when running the standalone built image.
     stdin_open: true
+    userns_mode: keep-id
     user: ${UID:-65532}:${GID:-65532}
     working_dir: /mnt/server-files/${UID:-65532}_${GID:-65532}
     volumes:
-      - ./out:/mnt/server-files/${UID:-65532}_${GID:-65532}
-      #- ./server.jar:/home/server.jar
+      - ./out:/mnt/server-files/${UID:-65532}_${GID:-65532}:Z
+      # - ./server.jar:/home/server.jar:ro,Z
     tty: true
     ports:
       - "25565:25565"
